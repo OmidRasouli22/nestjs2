@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -112,15 +116,41 @@ export class UserService {
     };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async selection() {
+    let where: FindOptionsWhere<UserEntity> = {};
+    return await this.userRepository.find({
+      where,
+      select: ['id', 'first_name'],
+    });
+    // return await this.userRepository.find({
+    //   where,
+    //   select: {
+    //     first_name: true,
+    //     last_name: true,
+    //     email: true,
+    //   },
+    // });
+  }
+
+  async findOne(id: number) {
+    return await this.userRepository.findOne({
+      where: { id },
+      select: {
+        id: true,
+        first_name: true,
+        last_name: true,
+      },
+    });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number) {
+    const user = await this.findOne(id);
+    if (!user) throw new NotFoundException();
+    const result = await this.userRepository.remove(user);
+    return result;
   }
 }

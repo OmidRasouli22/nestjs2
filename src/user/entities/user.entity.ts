@@ -1,31 +1,43 @@
-import { Column, CreateDateColumn, Entity, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BlogEntity } from 'src/blog/entities/blog.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryColumn,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
-@Entity("users")
+@Entity('users')
 export class UserEntity {
-    @PrimaryGeneratedColumn("increment")
-    id: number;
+  @PrimaryGeneratedColumn('increment')
+  id: number;
 
-    @Column({
-        length: 100,
-        nullable: true,
-    })
-    first_name: string;
+  @Column({
+    length: 100,
+    nullable: true,
+  })
+  first_name: string;
 
-    @Column({
-        length: 100,
-        nullable: true
-    })
-    last_name: string;
+  @Column({
+    length: 100,
+    nullable: true,
+  })
+  last_name: string;
 
-    @Column({unique: true})
-    email: string;
+  @Column({ unique: true })
+  email: string;
 
-    @Column({nullable: true})
-    age: number;
+  @Column({ nullable: true })
+  age: number;
 
-    @CreateDateColumn()
-    created_at: Date;
+  @OneToMany(() => BlogEntity, (blog) => blog.user)
+  blogs: BlogEntity[];
 
-    @UpdateDateColumn()
-    updated_at: Date;
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
 }

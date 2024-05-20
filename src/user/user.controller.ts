@@ -36,6 +36,11 @@ export class UserController {
     return this.userService.pagination({ page: +page, limit: +limit });
   }
 
+  @Get('/selection')
+  selection() {
+    return this.userService.selection();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userService.findOne(+id);
