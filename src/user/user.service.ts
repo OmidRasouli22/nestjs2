@@ -72,6 +72,46 @@ export class UserService {
     });
   }
 
+  async pagination({ page = 0, limit = 5 }: { page: number; limit: number }) {
+    if (!page || page <= 1) page = 0;
+
+    if (!limit || limit <= 1) limit = 5;
+
+    const skip = page === 0 ? 0 : (page - 1) * limit;
+    const totalRows = await this.userRepository.count();
+    // firstPageUrl
+    const firstPageUrl = `http://localhost:3000/user/pagination?page=1&limit=${limit}`;
+    const lastPageIndex = Math.floor(totalRows / limit) + 1;
+    const lastPageUrl = `http://localhost:3000/user/pagination?page=${lastPageIndex}&limit=${limit}`;
+    const previousPage =
+      page === 0 || page === 1
+        ? null
+        : `http://localhost:3000/user/pagination?page=${page - 1}&limit=${limit}`;
+    const nextPage =
+      page === lastPageIndex
+        ? null
+        : page === 0
+          ? `http://localhost:3000/user/pagination?page=${page + 2}&limit=${limit}`
+          : `http://localhost:3000/user/pagination?page=${page + 1}&limit=${limit}`;
+
+    const users = await this.userRepository.find({
+      where: {},
+      order: { created_at: 'DESC' },
+      take: limit,
+      skip,
+    });
+
+    return {
+      pagination: {
+        firstPageUrl,
+        lastPageUrl,
+        previousPage,
+        nextPage,
+      },
+      data: users,
+    };
+  }
+
   findOne(id: number) {
     return `This action returns a #${id} user`;
   }

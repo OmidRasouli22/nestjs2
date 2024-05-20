@@ -7,10 +7,13 @@ import {
   Param,
   Delete,
   Query,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserPaginationDto } from './dto/users-pagination.dto';
 
 @Controller('user')
 export class UserController {
@@ -25,6 +28,12 @@ export class UserController {
   @Get()
   findAll(@Query('search') search?: string) {
     return this.userService.findAll(search);
+  }
+
+  @Get('/pagination')
+  pagination(@Query() queryPaginationDto: { page: number; limit: number }) {
+    const { page, limit } = queryPaginationDto;
+    return this.userService.pagination({ page: +page, limit: +limit });
   }
 
   @Get(':id')
