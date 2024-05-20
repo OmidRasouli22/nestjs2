@@ -13,8 +13,9 @@ import { UserModule } from './user/user.module';
       username: "postgres",
       password:"omid1378",
       database: "typeorm",
-      autoLoadEntities: true,
-      entities: [],
+      entities: [
+        "dist/**/**/*.entity{.ts,.js}"
+      ],
       synchronize: true,
     }),
     UserModule

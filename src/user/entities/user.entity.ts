@@ -1,24 +1,26 @@
 import { Column, CreateDateColumn, Entity, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-@Entity("user")
+@Entity("users")
 export class UserEntity {
     @PrimaryGeneratedColumn("increment")
     id: number;
 
     @Column({
         length: 100,
+        nullable: true,
     })
     first_name: string;
 
     @Column({
         length: 100,
+        nullable: true
     })
     last_name: string;
 
-    @Column()
+    @Column({unique: true})
     email: string;
 
-    @Column("smallint")
+    @Column({nullable: true})
     age: number;
 
     @CreateDateColumn()
