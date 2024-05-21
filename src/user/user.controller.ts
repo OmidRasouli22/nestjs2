@@ -9,11 +9,13 @@ import {
   Query,
   UsePipes,
   ValidationPipe,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserPaginationDto } from './dto/users-pagination.dto';
+import { CreateProfileDto } from './dto/create-profile.dto';
 
 @Controller('user')
 export class UserController {
@@ -46,6 +48,11 @@ export class UserController {
     return this.userService.findOne(+id);
   }
 
+  @Get('/blogs/:userId')
+  findAllBlogsForOneUser(@Param('userId', ParseIntPipe) id: number) {
+    return this.userService.findAllBlogsForOneUser(id);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(+id, updateUserDto);
@@ -54,5 +61,18 @@ export class UserController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
+  }
+
+  @Post('/profile/:userId')
+  createProfile(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Body() createProfileDto: CreateProfileDto,
+  ) {
+    const { bio, profileImage } = createProfileDto;
+    return this.userService.createProfile(userId, { bio, profileImage });
+  }
+  @Get('/profile/:userId')
+  getUserProfile(@Param('userId', ParseIntPipe) userId: number) {
+    return this.userService.getUserProfile(userId);
   }
 }
