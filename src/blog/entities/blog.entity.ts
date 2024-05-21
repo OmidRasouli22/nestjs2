@@ -14,9 +14,6 @@ export class BlogEntity {
   @Column({ type: 'varchar', nullable: false })
   content: string;
 
-  @Column()
-  authorId: number;
-
   @ManyToOne(() => UserEntity, (user) => user.blogs, { onDelete: 'CASCADE' })
   user: UserEntity;
 }
